@@ -1,4 +1,6 @@
 import React from 'react'
+import Search from './components/search'
+import Artist from './components/artist'
 
 let EchoSuggest = React.createClass({
   getInitialState(){
@@ -17,20 +19,58 @@ let EchoSuggest = React.createClass({
     }
   },
   render(){
+    let displayPage;
+    switch (this.state.page){
+      case 'artist':
+        displayPage = this.renderArtist();
+        break;
+      case 'list':
+      default:
+        displayPage = this.renderSearch();
+        break;
+    }
+    console.log(displayPage)
     return (
       <div className='suggestion-app container'>
+
         <h3>Echo Suggest</h3>
-        <div className="form-group well">
-          <input className='form-control' placeholder="Type an artist.." />
-        </div>
+        <button
+          onClick={this.handleClickSearchButton}
+          className='btn btn-default'>
+          Search
+        </button>
+
+        {displayPage}
+      </div>
+    );
+  },
+  handleClickSearchButton(){
+    this.setState({ page: 'list' })
+  },
+  handleClickArtist(artist, event){
+    event.preventDefault()
+    this.setState({ page: 'artist', artist: artist })
+  },
+  renderArtist(){
+    return (
+      <Artist />
+    )
+  },
+  renderSearch(){
+    return (
+      <div className="search">
+        <Search />
         <div className="results list-group">
           {this.state.suggestedArtists.map(artist=>
-            <a href='#' className='list-group-item' key={artist.id}>{artist.name}</a>
+            <a href='#' key={artist.id}
+              onClick={this.handleClickArtist.bind(null, artist)}
+              className='list-group-item'
+            >{artist.name}</a>
           )}
         </div>
       </div>
-    );
-  }
+    )
+  },
 })
 
 React.render(
