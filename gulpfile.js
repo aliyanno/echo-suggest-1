@@ -1,5 +1,6 @@
 var gulp = require('gulp')
   , path = require('path')
+  , del = require('del')
 
 var $ = require('gulp-load-plugins')({
   scope: ['devDependencies'],
@@ -16,11 +17,22 @@ const ROOT = path.join(__dirname)
     serveHTML: path.join(DIST, 'index.html')
   }
 
+gulp.task('clean', function(done){
+  del([
+    DIST
+  ], done)
+})
+
 gulp.task('copy:html', function(){
   gulp.src(FILES.index)
     .pipe(gulp.dest(DIST))
     .pipe($.connect.reload())
 })
+
+gulp.task('bower', function() {
+  return $.bower()
+    .pipe(gulp.dest(DIST + '/vendor'))
+});
 
 gulp.task('scripts:build', function(){
   gulp.src(FILES.entry)
@@ -64,7 +76,9 @@ gulp.task('watch:html', function(){
 });
 
 gulp.task('dev', [
+    'clean',
     'copy:html',
+    'bower',
     'connect:start',
     'watch:html',
     'scripts:build'
