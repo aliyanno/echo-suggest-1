@@ -16,8 +16,14 @@ const ROOT = path.join(__dirname)
     serveHTML: path.join(DIST, 'index.html')
   }
 
+gulp.task('copy:html', function(){
+  gulp.src(FILES.index)
+    .pipe(gulp.dest(DIST))
+    .pipe($.connect.reload())
+})
+
 gulp.task('scripts:build', function(){
-  return gulp.src(FILES.entry)
+  gulp.src(FILES.entry)
     .pipe($.webpack({
       output: {
         filename: '[name].js'
@@ -31,7 +37,7 @@ gulp.task('scripts:build', function(){
       module: {
         loaders: [
           {
-            test: /\.es6$/, // looking for es6 extension
+            test: /\.es6$/,
             exclude: /node_modules/,
             loaders: [ 'babel?experimental&optional=runtime&playground' ]
           }
@@ -39,12 +45,6 @@ gulp.task('scripts:build', function(){
       }
     }))
     .pipe(gulp.dest(DIST))
-    .pipe($.connect.reload()) // can swap for browserSync
-})
-
-gulp.task('reload:html', function(){
-  return gulp.src(FILES.index)
-    .dest(DIST)
     .pipe($.connect.reload())
 })
 
@@ -53,16 +53,21 @@ gulp.task('connect:start', function(){
     root: DIST,
     livereload: true
   })
-  return gulp.src(FILES.serveHTML)
+  gulp.src(FILES.serveHTML)
     .pipe($.open('',{
       url: 'http://localhost:8080'
     }))
 });
 
 gulp.task('watch:html', function(){
-  return gulp.watch(FILES.index, ['reload:html'])
+  gulp.watch(FILES.index, ['copy:html'])
 });
 
-gulp.task('dev', ['connect:start', 'watch:html', 'scripts:build'])
+gulp.task('dev', [
+    'copy:html',
+    'connect:start',
+    'watch:html',
+    'scripts:build'
+  ])
 
 gulp.task('default', $.taskListing)
