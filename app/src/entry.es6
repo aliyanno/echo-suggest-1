@@ -18,13 +18,16 @@ let EchoSuggest = React.createClass({
   },
   render(){
     return (
-      <div className='suggestion-app'>
-        <input placeholder="Type an artist.." />
-        <ul className="results">
+      <div className='suggestion-app container'>
+        <h3>Echo Suggest</h3>
+        <div className="form-group well">
+          <input className='form-control' placeholder="Type an artist.." />
+        </div>
+        <div className="results list-group">
           {this.state.suggestedArtists.map(artist=>
-            <li key={artist.id}>{artist.name}</li>
+            <a href='#' className='list-group-item' key={artist.id}>{artist.name}</a>
           )}
-        </ul>
+        </div>
       </div>
     );
   }
