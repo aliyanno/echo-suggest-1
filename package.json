@@ -26,6 +26,8 @@
     "webpack": "^1.7.3"
   },
   "dependencies": {
+    "axios": "^0.5.2",
+    "lodash": "^3.5.0",
     "react": "^0.13.1"
   }
 }

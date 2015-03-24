@@ -1,6 +1,8 @@
 import React from 'react'
+import axios from 'axios'
 import Search from './components/search'
 import Artist from './components/artist'
+import API from './config'
 
 let EchoSuggest = React.createClass({
   getInitialState(){
@@ -31,14 +33,12 @@ let EchoSuggest = React.createClass({
     }
     return (
       <div className='suggestion-app container'>
-
         <h3>Echo Suggest</h3>
         <button
           onClick={this.handleClickSearchButton}
           className='btn btn-default'>
           Search
         </button>
-
         {displayPage}
       </div>
     );
@@ -50,24 +50,35 @@ let EchoSuggest = React.createClass({
     event.preventDefault()
     this.setState({ page: 'artist', artist: artist })
   },
+  handleSearch(artist, event){
+    event.preventDefault()
+    axios({
+      method: 'GET',
+      url: `${API.endpoint}/artist/similar`,
+      params: {
+        name: artist,
+        api_key: API.api_key
+      }
+    }).then(({data})=>{
+      this.setState({
+        suggestedArtists: data.response.artists
+      })
+    })
+  },
   renderArtist(){
     return (
-      <Artist />
+      <Artist
+        artistName={this.state.artist.name}
+      />
     )
   },
   renderSearch(){
     return (
-      <div className="search">
-        <Search />
-        <div className="results list-group">
-          {this.state.suggestedArtists.map(artist=>
-            <a href='#' key={artist.id}
-              onClick={this.handleClickArtist.bind(null, artist)}
-              className='list-group-item'
-            >{artist.name}</a>
-          )}
-        </div>
-      </div>
+      <Search
+        suggestedArtists={this.state.suggestedArtists}
+        onClickArtist={this.handleClickArtist}
+        onSearch={this.handleSearch}
+      />
     )
   },
 })
