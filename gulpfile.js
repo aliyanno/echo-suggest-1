@@ -1,5 +1,7 @@
 var gulp = require('gulp')
   , path = require('path')
+  , del = require('del')
+  , mainBowerFiles = require('main-bower-files');
 
 var $ = require('gulp-load-plugins')({
   scope: ['devDependencies'],
@@ -16,14 +18,22 @@ const ROOT = path.join(__dirname)
     serveHTML: path.join(DIST, 'index.html')
   }
 
+gulp.task('clean', function(done){
+  del.sync([ DIST ])
+  done()
+})
+
 gulp.task('copy:html', function(){
   gulp.src(FILES.index)
     .pipe(gulp.dest(DIST))
     .pipe($.connect.reload())
 })
 
-gulp.task('bower', function() {
-  $.bower()
+gulp.task('bower-files', function() {
+  gulp.src(mainBowerFiles())
+    .pipe($.stripCode({
+      pattern: /\/\*\# sourceMapping.+\*\//
+    }))
     .pipe(gulp.dest(DIST + '/vendor'))
 });
 
@@ -53,7 +63,7 @@ gulp.task('scripts:build', function(){
     .pipe($.connect.reload())
 })
 
-gulp.task('connect:start',['bower'], function(){
+gulp.task('connect:start', function(){
   $.connect.server({
     root: DIST,
     livereload: true
@@ -69,10 +79,12 @@ gulp.task('watch:html', function(){
 });
 
 gulp.task('dev', [
+    'bower-files',
     'scripts:build',
     'copy:html',
     'connect:start',
     'watch:html'
   ])
+
 
 gulp.task('default', $.taskListing)
