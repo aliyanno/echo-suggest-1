@@ -29,7 +29,6 @@ let EchoSuggest = React.createClass({
         displayPage = this.renderSearch();
         break;
     }
-    console.log(displayPage)
     return (
       <div className='suggestion-app container'>
 

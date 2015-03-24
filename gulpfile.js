@@ -1,6 +1,5 @@
 var gulp = require('gulp')
   , path = require('path')
-  , del = require('del')
 
 var $ = require('gulp-load-plugins')({
   scope: ['devDependencies'],
@@ -13,15 +12,9 @@ const ROOT = path.join(__dirname)
   , DIST = path.join(ROOT, 'dist')
   , FILES = {
     entry: path.join(APP, 'src', 'entry.es6'),
-    index: path.join(APP, 'src', 'index.html'),
+    index: path.join(APP, 'index.html'),
     serveHTML: path.join(DIST, 'index.html')
   }
-
-gulp.task('clean', function(done){
-  del([
-    DIST
-  ], done)
-})
 
 gulp.task('copy:html', function(){
   gulp.src(FILES.index)
@@ -30,7 +23,7 @@ gulp.task('copy:html', function(){
 })
 
 gulp.task('bower', function() {
-  return $.bower()
+  $.bower()
     .pipe(gulp.dest(DIST + '/vendor'))
 });
 
@@ -60,7 +53,7 @@ gulp.task('scripts:build', function(){
     .pipe($.connect.reload())
 })
 
-gulp.task('connect:start', function(){
+gulp.task('connect:start',['bower'], function(){
   $.connect.server({
     root: DIST,
     livereload: true
@@ -76,12 +69,10 @@ gulp.task('watch:html', function(){
 });
 
 gulp.task('dev', [
-    'clean',
+    'scripts:build',
     'copy:html',
-    'bower',
     'connect:start',
-    'watch:html',
-    'scripts:build'
+    'watch:html'
   ])
 
 gulp.task('default', $.taskListing)
