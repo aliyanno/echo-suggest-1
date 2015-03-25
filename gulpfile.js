@@ -29,7 +29,7 @@ gulp.task('copy:html', function(){
     .pipe($.connect.reload())
 })
 
-gulp.task('bower-files', function() {
+gulp.task('bower:files', function() {
   gulp.src(mainBowerFiles())
     .pipe($.stripCode({
       pattern: /\/\*\# sourceMapping.+\*\//
@@ -69,7 +69,7 @@ gulp.task('connect:start', function(){
     livereload: true
   })
   gulp.src(FILES.serveHTML)
-    .pipe($.open('',{
+    .pipe($.open('', {
       url: 'http://localhost:8080'
     }))
 });
@@ -79,9 +79,9 @@ gulp.task('watch:html', function(){
 });
 
 gulp.task('dev', [
-    'bower-files',
-    'scripts:build',
     'copy:html',
+    'bower:files',
+    'scripts:build',
     'connect:start',
     'watch:html'
   ])

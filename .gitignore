@@ -1,3 +1,4 @@
-dist
+dist/*
+!dist/index.html
 node_modules
-app/src/vendor/
+app/vendor/
