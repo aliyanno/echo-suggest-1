@@ -1,9 +1,18 @@
 import React from 'react'
 
 let ArtistView = React.createClass({
+  handleClick: function () {
+    this.props.backSelect();
+  },
+
   render: function () {
     return (
-      <p>ArtistView</p>
+      <div>
+        <button className="btn btn-default" onClick={this.handleClick}>
+          Back
+        </button>
+        <p>ArtistView</p>
+      </div>
     )
   }
 });

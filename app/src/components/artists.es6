@@ -1,16 +1,18 @@
 import React from 'react'
+import _ from 'lodash'
 
 let Artists = React.createClass({
   handleClick: function () {
-    this.props.artistSelect();
+    artistSelect();
   },
 
   render: function () {
+    let {suggestedArtists} = this.props;
     return (
       <div>
-        <a onClick={this.handleClick}>
-          <p>Artist</p>
-        </a>
+        { suggestedArtists.map(function(artist) {
+          return <p key={artist.id}>{artist.name}</p>
+        })}
       </div>
     );
   }

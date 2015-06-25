@@ -1,29 +1,59 @@
 import React from 'react'
+import Axios from 'axios'
+import API from './config'
 import ArtistView from './components/artistView'
 import SearchView from './components/searchView'
 
 let EchoSuggest = React.createClass({
   getInitialState: function () {
     return {
-      view: 'search'
+      view: 'search',
+      suggestedArtists: []
     }
   },
 
   renderSearch: function () {
     return (
-      <SearchView artistSelect={this.artistSelected}/>
+      <SearchView artistSelect={this.artistSelected}
+        searchSelect={this.searchSelected}
+        suggestedArtists={this.state.suggestedArtists}/>
     );
   },
 
   renderArtist: function () {
     return (
-      <ArtistView />
+      <ArtistView backSelect={this.backSelected}/>
     );
   },
 
   artistSelected: function () {
     this.setState({
       view: 'artist'
+    });
+  },
+
+  backSelected: function () {
+    this.setState({
+      view: 'search'
+    });
+  },
+
+  searchSelected: function (artist, event) {
+    var self = this;
+    Axios.get('http://developer.echonest.com/api/v4/artist/similar', {
+      params: {
+        name: artist,
+        api_key: API.api_key
+      }
+    })
+    .then(function (response) {
+      console.log(response.data.response.artists);
+      self.setState({
+        suggestedArtists: response.data.response.artists
+      });
+    })
+    .catch(function (response) {
+      console.log(response);
     });
   },
 
