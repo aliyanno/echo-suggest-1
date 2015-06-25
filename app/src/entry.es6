@@ -11,7 +11,7 @@ let EchoSuggest = React.createClass({
 
   renderSearch: function () {
     return (
-      <SearchView />
+      <SearchView artistSelect={this.artistSelected}/>
     );
   },
 
@@ -19,6 +19,12 @@ let EchoSuggest = React.createClass({
     return (
       <ArtistView />
     );
+  },
+
+  artistSelected: function () {
+    this.setState({
+      view: 'artist'
+    });
   },
 
   render: function () {

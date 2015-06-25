@@ -1,18 +1,16 @@
 import React from 'react'
 
 let Artists = React.createClass({
+  handleClick: function () {
+    this.props.artistSelect();
+  },
+
   render: function () {
     return (
       <div>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
-        <p>Artist</p>
+        <a onClick={this.handleClick}>
+          <p>Artist</p>
+        </a>
       </div>
     );
   }
